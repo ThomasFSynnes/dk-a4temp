@@ -11,7 +11,7 @@ import static org.junit.Assert.*;
 public class TcpClientTest {
     // Host and port to be used for all connection in the tests
     private static final String SERVER_HOST = "datakomm.work";
-    private static final int SERVER_PORT = 1310;
+    private static final int SERVER_PORT = 1300;
 
     // How many ms to sleep when waiting for server response to arrive
     private static final int THREAD_SLEEP_TIME = 2000;
@@ -101,7 +101,8 @@ public class TcpClientTest {
      */
     @Test
     public void testPublicMessages() throws InterruptedException {
-        // Create three clients. When one sends a message others should receive
+
+        System.out.println("Create three clients. When one sends a message others should receive");
         TCPClient c1 = new TCPClient();
         TCPClient c2 = new TCPClient();
         TCPClient c3 = new TCPClient();
@@ -109,11 +110,11 @@ public class TcpClientTest {
         assertTrue(c2.connect(SERVER_HOST, SERVER_PORT));
         assertTrue(c3.connect(SERVER_HOST, SERVER_PORT));
 
-        // Client 1 logs in with a specific username
+        System.out.println("Client 1 logs in with a specific username");
         String C1_USERNAME = "UnitTestCC";
         c1.tryLogin(C1_USERNAME);
 
-        // Clients 2 and 3 will listen for incoming messages, each on a different CPU thread
+        System.out.println("Clients 2 and 3 will listen for incoming messages, each on a different CPU thread");
         c2.startListenThread();
         c3.startListenThread();
         DummyMsgReceiver rec2 = new DummyMsgReceiver();
@@ -124,7 +125,7 @@ public class TcpClientTest {
         final String MSG_TEXT = "[Unittest] This is a specific text message, please, don't repeat it!";
         c1.sendPublicMessage(MSG_TEXT);
 
-        // Allow the messages to arrive
+        System.out.println("Allow the messages to arrive");
         Thread.sleep(THREAD_SLEEP_TIME);
 
         TextMessage expectedMsg = new TextMessage(C1_USERNAME, false, MSG_TEXT);
